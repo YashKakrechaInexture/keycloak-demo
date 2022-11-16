@@ -1,9 +1,18 @@
 package com.example.keycloakdemo.Configs;
 
+//import jakarta.ws.rs.client.ClientBuilder;
+import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
+//import javax.ws.rs.client.Client;
+//import javax.ws.rs.client.Client;
+//import javax.ws.rs.client.ClientBuilder;
 
 public class KeycloakConfig {
 
@@ -20,6 +29,11 @@ public class KeycloakConfig {
 
     public static Keycloak getInstance(){
         if(keycloak == null){
+//            ResteasyClientBuilderImpl resteasyClientBuilderImpl = new ResteasyClientBuilderImpl();
+//            resteasyClientBuilderImpl.connectionPoolSize(10);
+//            ResteasyClient resteasyClient = resteasyClientBuilderImpl.build();
+
+            ResteasyClient client = (ResteasyClient) ClientBuilder.newClient();
 
             keycloak = KeycloakBuilder.builder()
                     .serverUrl(serverUrl)
@@ -29,10 +43,7 @@ public class KeycloakConfig {
                     .password(password)
                     .clientId(clientId)
                     .clientSecret(clientSecret)
-                    .resteasyClient(new ResteasyClientBuilder()
-                            .connectionPoolSize(10)
-                            .build()
-                            )
+                    .resteasyClient(client)
                     .build();
         }
         return keycloak;
