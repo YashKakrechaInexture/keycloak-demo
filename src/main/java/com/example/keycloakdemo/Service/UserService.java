@@ -42,13 +42,13 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setCredentials(Collections.singletonList(credential));
         user.setEnabled(true);
-        List<String> list = new ArrayList<>();
-        list.add("java");
-        user.setRealmRoles(list);
+//        List<String> list = new ArrayList<>();
+//        list.add("java");
+//        user.setRealmRoles(list);
 
         UsersResource instance = getInstance();
         Response response = instance.create(user);
-//        this.addRealmRoleToUser(user.getUsername(),"java");
+        this.addRealmRoleToUser(user.getUsername(),"java");
         if(response.getStatus()!=HttpStatus.SC_CREATED){
             return "Exception Occured.";
         }
@@ -77,15 +77,28 @@ public class UserService {
                 .users()
                 .get(userId);
         List<RoleRepresentation> roleToAdd = new LinkedList<>();
-        roleToAdd.add(keycloak
+//
+//        Client level role :
+//
+//        RolesResource rolesResource = keycloak
+//                .realm(realm)
+//                .clients()
+//                .get(client_id)
+//                .roles();
+//        RoleResource roleResource = rolesResource.get(role_name);
+//        RoleRepresentation roleRepresentation = roleResource.toRepresentation();
+//        roleToAdd.add(roleRepresentation);
+//        user.roles().clientLevel(client_id).add(roleToAdd);
+//
+//        Realm level role :
+//
+        RolesResource rolesResource = keycloak
                 .realm(realm)
-                .clients()
-                .get(client_id)
-                .roles()
-                .get(role_name)
-                .toRepresentation()
-        );
-        user.roles().clientLevel(client_id).add(roleToAdd);
+                .roles();
+        RoleResource roleResource = rolesResource.get(role_name);
+        RoleRepresentation roleRepresentation = roleResource.toRepresentation();
+        roleToAdd.add(roleRepresentation);
+        user.roles().realmLevel().add(roleToAdd);
     }
 
 }
