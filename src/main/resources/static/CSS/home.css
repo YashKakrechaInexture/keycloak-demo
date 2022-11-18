@@ -1,0 +1,14 @@
+#login-btn{
+    color: #198754;
+    padding: 6px 12px;
+    margin-right: 10px;
+}
+#logout-btn{
+    color: #dc3545;
+}
+#logout-btn:hover{
+    color: white;
+}
+#login-btn:hover{
+    color: white;
+}
