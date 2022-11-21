@@ -46,7 +46,10 @@ public class FrontController {
 
     @GetMapping("/roles")
     public ModelAndView rolesPage(KeycloakAuthenticationToken token){
-        return setUserInformation(token,"roles");
+        ModelAndView modelAndView = setUserInformation(token,"roles");
+        modelAndView.addObject("realmRoles",userService.getAllRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername()));
+//        modelAndView.addObject("userRealmRoles",userService.getUserRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername()));
+        return modelAndView;
     }
 
     @GetMapping("/public")
@@ -59,5 +62,16 @@ public class FrontController {
     @ResponseBody
     public String createUser(UserDTO userDTO) throws Exception {
         return userService.addUser(userDTO) ;
+    }
+
+    @GetMapping("/addRealmRole/{name}")
+    @ResponseBody
+    public String addRealmRole(@PathVariable String name,
+                               KeycloakAuthenticationToken token){
+        KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
+        KeycloakSecurityContext session = principal.getKeycloakSecurityContext();
+        AccessToken accessToken = session.getToken();
+        userService.addRealmRoleToUser(accessToken.getPreferredUsername(),name);
+        return name + " role Added.";
     }
 }

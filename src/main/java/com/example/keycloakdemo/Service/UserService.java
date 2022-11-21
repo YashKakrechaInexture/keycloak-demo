@@ -1,6 +1,7 @@
 package com.example.keycloakdemo.Service;
 
 import com.example.keycloakdemo.Configs.KeycloakConfig;
+import com.example.keycloakdemo.DTO.RoleDTO;
 import com.example.keycloakdemo.DTO.UserDTO;
 import com.example.keycloakdemo.Util.Credentials;
 import org.apache.http.HttpStatus;
@@ -16,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -58,7 +56,7 @@ public class UserService {
         return KeycloakConfig.getInstance().realm(realm).users();
     }
 
-    public void addRealmRoleToUser(String userName, String role_name){
+        public void addRealmRoleToUser(String userName, String role_name){
         Keycloak keycloak = KeycloakConfig.getInstance();
         String client_id = keycloak
                 .realm(realm)
@@ -100,5 +98,40 @@ public class UserService {
         roleToAdd.add(roleRepresentation);
         user.roles().realmLevel().add(roleToAdd);
     }
+    public List<RoleDTO> getAllRealmRoles(String userName){
+        Keycloak keycloak = KeycloakConfig.getInstance();
+        RolesResource rolesResource = keycloak
+                .realm(realm)
+                .roles();
+        List<RoleRepresentation> roles = rolesResource.list();
+        List<RoleRepresentation> userRoles = getUserRealmRoles(userName);
+        Set<String> set = new HashSet<>();
 
+        for(RoleRepresentation roleRepresentation : userRoles){
+            set.add(roleRepresentation.getName());
+        }
+
+        List<RoleDTO> roleDTOList = new ArrayList<>();
+        for(RoleRepresentation roleRepresentation : roles){
+            RoleDTO roleDTO = new RoleDTO();
+            roleDTO.setName(roleRepresentation.getName());
+            roleDTO.setAssign(set.contains(roleRepresentation.getName()));
+            roleDTOList.add(roleDTO);
+        }
+        return roleDTOList;
+    }
+    public List<RoleRepresentation> getUserRealmRoles(String userName){
+        Keycloak keycloak = KeycloakConfig.getInstance();
+        String userId = keycloak
+                .realm(realm)
+                .users()
+                .search(userName)
+                .get(0)
+                .getId();
+        UserResource user = keycloak
+                .realm(realm)
+                .users()
+                .get(userId);
+        return user.roles().realmLevel().listAll();
+    }
 }
