@@ -1,5 +1,6 @@
 package com.example.keycloakdemo.Configs;
 
+import org.keycloak.adapters.KeycloakConfigResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -11,4 +12,5 @@ public class CustomConfigs {
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
     }
+
 }

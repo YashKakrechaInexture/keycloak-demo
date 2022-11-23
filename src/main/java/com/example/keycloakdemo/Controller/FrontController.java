@@ -18,11 +18,17 @@ import java.util.Scanner;
 
 import static com.example.keycloakdemo.Util.Credentials.setUserInformation;
 
-@Controller
+@Controller("/tenant")
 public class FrontController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/{realm}")
+    @ResponseBody
+    public String loginPage(@PathVariable String realm){
+        return "Welcome to "+realm+" region.";
+    }
 
     @GetMapping("/")
     public ModelAndView homePage(KeycloakAuthenticationToken token){
@@ -30,11 +36,11 @@ public class FrontController {
     }
 
     @GetMapping("/admin")
-    public String adminPage(){
-        return "admin";
+    public ModelAndView  adminPage(KeycloakAuthenticationToken token){
+        return setUserInformation(token,"home");
     }
 
-    @GetMapping("/user")
+    @GetMapping("/{realm}/user")
     public ModelAndView userPage(KeycloakAuthenticationToken token){
         return setUserInformation(token,"user");
     }

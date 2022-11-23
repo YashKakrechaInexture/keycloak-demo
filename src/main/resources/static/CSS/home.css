@@ -12,3 +12,6 @@
 #login-btn:hover{
     color: white;
 }
+.modal{
+    top: 200px;
+}

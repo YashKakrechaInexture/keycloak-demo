@@ -25,7 +25,7 @@
                     <div th:case="null">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-success" id="login-btn" type="button" href="/user">Login</a>
+                                <button class="btn btn-outline-success" id="login-btn" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
                             </li>
                             <li class="nav-item">
                                 <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
@@ -50,12 +50,32 @@
     <br>
     <br>
 
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="loginModalLabel">Login Region</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <a type="button" class="col-md-5" href="/tenant/us">
+                        <div>US</div>
+                    </a>
+                    <a type="button" class="col-md-5 col-md-offset-2" href="/tenant/in">India</a>
+                </div>
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <form action="/create" method="post">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Register User</h1>
+                        <h1 class="modal-title fs-5" id="registerModalLabel">Register User</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
