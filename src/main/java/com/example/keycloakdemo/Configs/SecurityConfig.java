@@ -131,16 +131,17 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                         (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> response.setStatus(HttpServletResponse.SC_OK));
         http
                 .authorizeRequests()
-                .antMatchers("/tenant/**","/tenant/*/profile","/tenant/*/roles").hasRole("user")
-                .antMatchers("/admin*").hasRole("admin")
-                .antMatchers("/tenant/*").hasRole("user")
-                .antMatchers("/static/*","/CSS/*","/favicon.ico","/").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/tenant/*/logout")
-                .logoutSuccessUrl("/")
-                .permitAll();
+//                .antMatchers("/tenant/**","/user","/profile","/roles").hasRole("user")
+//                .antMatchers("/admin*").hasRole("admin")
+//                .antMatchers("/tenant/*").hasRole("user")
+                .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/","/tenant/**/index").permitAll()
+                .anyRequest().authenticated();
+//                .anyRequest().permitAll()
+//                .and()
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/")
+//                .permitAll();
         http.csrf().disable();
     }
 }

@@ -22,12 +22,12 @@ import java.util.*;
 @Service
 public class UserService {
 
-    @Value("${keycloak.realm}")
-    private String realm;
+//    @Value("${keycloak.realm}")
+//    private String realm;
 //    = "demoRealm"
 
-    @Value("${keycloak.resource}")
-    private String clientId;
+//    @Value("${keycloak.resource}")
+//    private String clientId;
 //    = "demoClient"
 
     public String addUser(UserDTO userDTO) throws Exception {
@@ -44,34 +44,34 @@ public class UserService {
 //        list.add("java");
 //        user.setRealmRoles(list);
 
-        UsersResource instance = getInstance();
+        UsersResource instance = getInstance(userDTO.getRealm());
         Response response = instance.create(user);
-        this.addRealmRoleToUser(user.getUsername(),"java");
+//        this.addRealmRoleToUser(user.getUsername(),"java");
         if(response.getStatus()!=HttpStatus.SC_CREATED){
             return "Exception Occured.";
         }
         return "User Created.";
     }
-    public UsersResource getInstance(){
-        return KeycloakConfig.getInstance().realm(realm).users();
+    public UsersResource getInstance(String realmName){
+        return KeycloakConfig.getInstance().realm(realmName).users();
     }
 
-        public void addRealmRoleToUser(String userName, String role_name){
+        public void addRealmRoleToUser(String userName, String role_name, String realmName){
         Keycloak keycloak = KeycloakConfig.getInstance();
-        String client_id = keycloak
-                .realm(realm)
-                .clients()
-                .findByClientId(clientId)
-                .get(0)
-                .getId();
+//        String client_id = keycloak
+//                .realm(realm)
+//                .clients()
+//                .findByClientId(clientId)
+//                .get(0)
+//                .getId();
         String userId = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .users()
                 .search(userName)
                 .get(0)
                 .getId();
         UserResource user = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .users()
                 .get(userId);
         List<RoleRepresentation> roleToAdd = new LinkedList<>();
@@ -91,20 +91,20 @@ public class UserService {
 //        Realm level role :
 //
         RolesResource rolesResource = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .roles();
         RoleResource roleResource = rolesResource.get(role_name);
         RoleRepresentation roleRepresentation = roleResource.toRepresentation();
         roleToAdd.add(roleRepresentation);
         user.roles().realmLevel().add(roleToAdd);
     }
-    public List<RoleDTO> getAllRealmRoles(String userName){
+    public List<RoleDTO> getAllRealmRoles(String userName,String realmName){
         Keycloak keycloak = KeycloakConfig.getInstance();
         RolesResource rolesResource = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .roles();
         List<RoleRepresentation> roles = rolesResource.list();
-        List<RoleRepresentation> userRoles = getUserRealmRoles(userName);
+        List<RoleRepresentation> userRoles = getUserRealmRoles(userName,realmName);
         Set<String> set = new HashSet<>();
 
         for(RoleRepresentation roleRepresentation : userRoles){
@@ -120,16 +120,16 @@ public class UserService {
         }
         return roleDTOList;
     }
-    public List<RoleRepresentation> getUserRealmRoles(String userName){
+    public List<RoleRepresentation> getUserRealmRoles(String userName, String realmName){
         Keycloak keycloak = KeycloakConfig.getInstance();
         String userId = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .users()
                 .search(userName)
                 .get(0)
                 .getId();
         UserResource user = keycloak
-                .realm(realm)
+                .realm(realmName)
                 .users()
                 .get(userId);
         return user.roles().realmLevel().listAll();

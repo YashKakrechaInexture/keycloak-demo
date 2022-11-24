@@ -18,66 +18,72 @@ import java.util.Scanner;
 
 import static com.example.keycloakdemo.Util.Credentials.setUserInformation;
 
-@Controller("/tenant")
+@Controller("/")
 public class FrontController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{realm}")
-    @ResponseBody
-    public String loginPage(@PathVariable String realm){
-        return "Welcome to "+realm+" region.";
+//    @GetMapping("/{realm}")
+//    @ResponseBody
+//    public String loginPage(@PathVariable String realm){
+//        return "Welcome to "+realm+" region.";
+//    }
+    @GetMapping("/tenant/{realm}")
+    public ModelAndView loginPage(@PathVariable String realm, KeycloakAuthenticationToken token){
+        return setUserInformation(token,"user");
     }
 
-    @GetMapping("/")
+    @GetMapping("/tenant/{realm}/index")
     public ModelAndView homePage(KeycloakAuthenticationToken token){
         return setUserInformation(token,"home");
     }
 
-    @GetMapping("/admin")
+    @GetMapping("/tenant/{realm}/admin")
     public ModelAndView  adminPage(KeycloakAuthenticationToken token){
         return setUserInformation(token,"home");
     }
 
-    @GetMapping("/{realm}/user")
+    @GetMapping("/tenant/{realm}/user")
     public ModelAndView userPage(KeycloakAuthenticationToken token){
         return setUserInformation(token,"user");
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/tenant/{realm}/profile")
     public ModelAndView profilePage(KeycloakAuthenticationToken token){
         return setUserInformation(token,"profile");
     }
 
-    @GetMapping("/roles")
+    @GetMapping("/tenant/{realm}/roles")
     public ModelAndView rolesPage(KeycloakAuthenticationToken token){
         ModelAndView modelAndView = setUserInformation(token,"roles");
-        modelAndView.addObject("realmRoles",userService.getAllRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername()));
+        modelAndView.addObject("realmRoles",userService.getAllRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername(),(String) modelAndView.getModel().get("realm")+"-realm"));
 //        modelAndView.addObject("userRealmRoles",userService.getUserRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername()));
         return modelAndView;
     }
 
-    @GetMapping("/public")
+    @GetMapping("/tenant/{realm}/public")
     @ResponseBody
     public String publicPage(){
         return "Welcome public";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/tenant/{realm}/create")
     @ResponseBody
     public String createUser(UserDTO userDTO) throws Exception {
         return userService.addUser(userDTO) ;
     }
 
-    @GetMapping("/addRealmRole/{name}")
+    @GetMapping("/tenant/{realm}/addRealmRole/{name}")
     @ResponseBody
     public String addRealmRole(@PathVariable String name,
                                KeycloakAuthenticationToken token){
         KeycloakPrincipal principal = (KeycloakPrincipal) token.getPrincipal();
         KeycloakSecurityContext session = principal.getKeycloakSecurityContext();
         AccessToken accessToken = session.getToken();
-        userService.addRealmRoleToUser(accessToken.getPreferredUsername(),name);
+        String issuer = accessToken.getIssuer();
+        String realm = issuer.substring(issuer.length()-8);
+        userService.addRealmRoleToUser(accessToken.getPreferredUsername(),name,realm);
         return name + " role Added.";
     }
 }

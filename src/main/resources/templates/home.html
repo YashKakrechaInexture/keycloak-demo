@@ -5,7 +5,26 @@
     <title>Home</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link href="/CSS/home.css" rel="stylesheet">
+<!--    <link href="/CSS/home.css" rel="stylesheet">-->
+    <style>
+        #login-btn{
+            color: #198754;
+            padding: 6px 12px;
+            margin-right: 10px;
+        }
+        #logout-btn{
+            color: #dc3545;
+        }
+        #logout-btn:hover{
+            color: white;
+        }
+        #login-btn:hover{
+            color: white;
+        }
+        .modal{
+            top: 200px;
+        }
+    </style>
 </head>
 <body>
     <!--  Navigation bar  -->
@@ -35,7 +54,7 @@
                     <div th:case="*">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-danger" id="logout-btn" type="button" href="/logout">Logout</a>
+                                <a class="nav-link btn btn-outline-danger" id="logout-btn" type="button" th:href="@{|/tenant/${realm}/logout|}">Logout</a>
                             </li>
                         </ul>
                     </div>
@@ -44,8 +63,8 @@
         </div>
     </nav>
     Home Page
-    <a href="/user">User</a>
-    <a href="/admin">Admin</a>
+    <a th:href="@{|/tenant/${realm}/user|}">User</a>
+    <a th:href="@{|/tenant/${realm}/admin|}">Admin</a>
 
     <br>
     <br>
@@ -59,8 +78,14 @@
                 </div>
                 <div class="modal-body">
                     <a type="button" class="col-md-5" href="/tenant/us">
-                        <div>US</div>
+                        <div>UK</div>
                     </a>
+                    <button onclick="location.href='/tenant/us'">
+                        <img src="https://cdn.pixabay.com/photo/2012/04/10/23/21/united-26967_960_720.png" width="30" />US
+                    </button>
+                    <button onclick="/tenant/in">
+                        <img src="https://cdn.pixabay.com/photo/2016/08/24/17/07/india-1617463_960_720.png" width="30" />In
+                    </button>
                     <a type="button" class="col-md-5 col-md-offset-2" href="/tenant/in">India</a>
                 </div>
 <!--                <div class="modal-footer">-->
@@ -93,6 +118,9 @@
                         <br>
                         <label>Lastname</label>
                         <input type="text" name="lastname">
+                        <br>
+                        <label>Realm</label>
+                        <input type="text" name="realm">
                         <br>
                     </div>
                     <div class="modal-footer">

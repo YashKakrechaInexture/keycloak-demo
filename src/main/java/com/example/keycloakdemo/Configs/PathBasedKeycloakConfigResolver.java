@@ -27,7 +27,10 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 //        }
 
         if(multitenantIndex != -1) {
-            realm = path.substring(path.indexOf("tenant/")).split("/")[1];
+            String arr[] = path.substring(path.indexOf("tenant/")).split("/");
+            if(arr.length>1) {
+                realm = arr[1];
+            }
         }
 
         System.out.println("Inside PathBasedKeycloakConfigResolver "+path);
@@ -41,8 +44,8 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
             return realmCache.get(realm);
         } else {
             System.out.println("Inside else");
-//            InputStream is = getClass().getResourceAsStream("/in-realm.json");
-            return null;
+            InputStream is = getClass().getResourceAsStream("/us-realm.json");
+            return KeycloakDeploymentBuilder.build(is);
         }
     }
 
