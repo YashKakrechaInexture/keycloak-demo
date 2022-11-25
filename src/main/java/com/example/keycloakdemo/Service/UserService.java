@@ -11,6 +11,7 @@ import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,9 @@ public class UserService {
 //    = "demoClient"
 
     public String addUser(UserDTO userDTO) throws Exception {
+        if(userDTO.getRealm()=="master"){
+            return "Exception Occured.";
+        }
         CredentialRepresentation credential = Credentials
                 .createPasswordCredentials(userDTO.getPassword());
         UserRepresentation user = new UserRepresentation();
@@ -59,7 +63,7 @@ public class UserService {
         public void addRealmRoleToUser(String userName, String role_name, String realmName){
         Keycloak keycloak = KeycloakConfig.getInstance();
 //        String client_id = keycloak
-//                .realm(realm)
+//                .realm(realmName)
 //                .clients()
 //                .findByClientId(clientId)
 //                .get(0)
@@ -79,7 +83,7 @@ public class UserService {
 //        Client level role :
 //
 //        RolesResource rolesResource = keycloak
-//                .realm(realm)
+//                .realm(realmName)
 //                .clients()
 //                .get(client_id)
 //                .roles();
@@ -133,5 +137,12 @@ public class UserService {
                 .users()
                 .get(userId);
         return user.roles().realmLevel().listAll();
+    }
+
+    public List<RealmRepresentation> getAllRealmNames(){
+        Keycloak keycloak = KeycloakConfig.getInstance();
+        List<RealmRepresentation> realmRepresentationsList = keycloak.realms().findAll();
+        realmRepresentationsList.removeIf(realmRepresentation -> realmRepresentation.getRealm().equals("master"));
+        return realmRepresentationsList;
     }
 }

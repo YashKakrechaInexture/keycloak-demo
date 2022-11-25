@@ -91,8 +91,7 @@
                                 Assigned
                             </div>
                             <div th:case="false">
-<!--                                <a th:href=""></a>-->
-                                <form th:action="@{/addRealmRole/{name}(name = ${role.name})}">
+                                <form th:action="@{|/tenant/${realm}/addRealmRole/${role.name}|}">
                                     <button type="submit" class="btn btn-primary btn-sm">Assign</button>
                                 </form>
                             </div>

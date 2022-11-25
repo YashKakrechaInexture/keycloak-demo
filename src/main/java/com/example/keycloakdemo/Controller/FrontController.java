@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 import static com.example.keycloakdemo.Util.Credentials.setUserInformation;
 
-@Controller("/")
+@Controller
 public class FrontController {
 
     @Autowired
@@ -36,7 +36,9 @@ public class FrontController {
 
     @GetMapping("/tenant/{realm}/index")
     public ModelAndView homePage(KeycloakAuthenticationToken token){
-        return setUserInformation(token,"home");
+        ModelAndView modelAndView = setUserInformation(token,"home");
+        modelAndView.addObject("realmList",userService.getAllRealmNames());
+        return modelAndView;
     }
 
     @GetMapping("/tenant/{realm}/admin")
@@ -68,7 +70,7 @@ public class FrontController {
         return "Welcome public";
     }
 
-    @PostMapping("/tenant/{realm}/create")
+    @PostMapping("/create")
     @ResponseBody
     public String createUser(UserDTO userDTO) throws Exception {
         return userService.addUser(userDTO) ;

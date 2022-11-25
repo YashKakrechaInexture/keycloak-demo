@@ -19,9 +19,10 @@ public class KeycloakConfig {
     static Keycloak keycloak = null;
     final static String serverUrl = "https://localhost:8443";
     public final static String realm = "master";
-    final static String clientId = "demoClient";
-    final static String clientSecret = "VBrj8tFN2xBx756fIbL51UZnvGRThFQe";
+    final static String clientId = "admin-cli";
+    final static String clientSecret = "";
     final static String userName = "admin";
+
     final static String password = "admin";
 
     public KeycloakConfig() {
@@ -29,9 +30,6 @@ public class KeycloakConfig {
 
     public static Keycloak getInstance(){
         if(keycloak == null){
-//            ResteasyClientBuilderImpl resteasyClientBuilderImpl = new ResteasyClientBuilderImpl();
-//            resteasyClientBuilderImpl.connectionPoolSize(10);
-//            ResteasyClient resteasyClient = resteasyClientBuilderImpl.build();
 
             ResteasyClient client = (ResteasyClient) ClientBuilder.newClient();
 

@@ -23,6 +23,7 @@ public class MultitenantKeycloakAuthenticationEntryPoint extends KeycloakAuthent
 
         String path = request.getRequestURI();
         int multitenantIndex = path.indexOf("tenant/");
+        System.out.println(path);
         if (multitenantIndex == -1) {
             throw new IllegalStateException("Not able to resolve the realm from the request path!");
         }

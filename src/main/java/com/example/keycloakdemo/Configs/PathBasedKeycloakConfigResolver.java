@@ -32,10 +32,7 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
                 realm = arr[1];
             }
         }
-
-        System.out.println("Inside PathBasedKeycloakConfigResolver "+path);
         if (realm != null) {
-            System.out.println("Inside if "+realm);
             if(realmCache.containsKey(realm)){
                 return realmCache.get(realm);
             }
@@ -43,7 +40,6 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
             realmCache.put(realm,KeycloakDeploymentBuilder.build(is));
             return realmCache.get(realm);
         } else {
-            System.out.println("Inside else");
             InputStream is = getClass().getResourceAsStream("/us-realm.json");
             return KeycloakDeploymentBuilder.build(is);
         }

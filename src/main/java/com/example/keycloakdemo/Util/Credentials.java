@@ -32,9 +32,10 @@ public class Credentials {
             userDTO.setLastname(accessToken.getFamilyName());
             userDTO.setEmail(accessToken.getEmail());
             userDTO.setUsername(accessToken.getPreferredUsername());
+
             String issuer = accessToken.getIssuer();
+
             modelAndView.addObject("realm",issuer.substring(issuer.length()-8,issuer.length()-6));
-            System.out.println(issuer.substring(issuer.length()-8,issuer.length()-6));
             modelAndView.addObject("user",userDTO);
         }
         return modelAndView;

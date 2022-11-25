@@ -5,26 +5,7 @@
     <title>Home</title>
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-<!--    <link href="/CSS/home.css" rel="stylesheet">-->
-    <style>
-        #login-btn{
-            color: #198754;
-            padding: 6px 12px;
-            margin-right: 10px;
-        }
-        #logout-btn{
-            color: #dc3545;
-        }
-        #logout-btn:hover{
-            color: white;
-        }
-        #login-btn:hover{
-            color: white;
-        }
-        .modal{
-            top: 200px;
-        }
-    </style>
+    <link href="/CSS/home.css" rel="stylesheet">
 </head>
 <body>
     <!--  Navigation bar  -->
@@ -73,24 +54,33 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="loginModalLabel">Login Region</h1>
+                    <h1 class="modal-title fs-5" id="loginModalLabel">Select Your Region</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <a type="button" class="col-md-5" href="/tenant/us">
-                        <div>UK</div>
-                    </a>
-                    <button onclick="location.href='/tenant/us'">
-                        <img src="https://cdn.pixabay.com/photo/2012/04/10/23/21/united-26967_960_720.png" width="30" />US
-                    </button>
-                    <button onclick="/tenant/in">
-                        <img src="https://cdn.pixabay.com/photo/2016/08/24/17/07/india-1617463_960_720.png" width="30" />In
-                    </button>
-                    <a type="button" class="col-md-5 col-md-offset-2" href="/tenant/in">India</a>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="region-box" onclick="location.href='/tenant/us'">
+                                <div class="login-img-div">
+                                    <img src="/images/us-flag.png" class="login-img" />
+                                </div>
+                                <div class="login-region-name">
+                                    US
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="region-box" onclick="location.href='/tenant/in'">
+                                <div class="login-img-div">
+                                    <img src="/images/in-flag.png" class="login-img" />
+                                </div>
+                                <div class="login-region-name">
+                                    IN
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-<!--                </div>-->
             </div>
         </div>
     </div>
@@ -104,24 +94,33 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <label>Username</label>
-                        <input type="text" name="username">
-                        <br>
-                        <label>Password</label>
-                        <input type="password" name="password">
-                        <br>
-                        <label>Email</label>
-                        <input type="email" name="email">
-                        <br>
-                        <label>Firstname</label>
-                        <input type="text" name="firstname">
-                        <br>
-                        <label>Lastname</label>
-                        <input type="text" name="lastname">
-                        <br>
-                        <label>Realm</label>
-                        <input type="text" name="realm">
-                        <br>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Firstname">
+                            <label for="firstname">Firstname</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Lastname">
+                            <label for="lastname">Lastname</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select" aria-label="Default select example" id="realm" name="realm">
+                                <option selected disabled>Select Realm</option>
+                                <option th:each="realmName : ${realmList}" th:value="${realmName.realm}" th:text="${realmName.realm}" />
+                            </select>
+                            <label for="realm">Realm</label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

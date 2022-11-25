@@ -128,13 +128,17 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .and().cors()
                 .and().logout().addLogoutHandler(keycloakLogoutHandler()).logoutUrl("/tenant/*/logout").logoutSuccessHandler(
                         // logout handler for API
-                        (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> response.setStatus(HttpServletResponse.SC_OK));
+                        (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+                            response.sendRedirect(request.getRequestURI().substring(0,10)+"/index");
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        });
+//                ).logoutSuccessUrl("/tenant/us/index");
         http
                 .authorizeRequests()
 //                .antMatchers("/tenant/**","/user","/profile","/roles").hasRole("user")
 //                .antMatchers("/admin*").hasRole("admin")
 //                .antMatchers("/tenant/*").hasRole("user")
-                .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/","/tenant/**/index").permitAll()
+                .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/","/tenant/**/index","/create").permitAll()
                 .anyRequest().authenticated();
 //                .anyRequest().permitAll()
 //                .and()
