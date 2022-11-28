@@ -1,24 +1,17 @@
 package com.example.keycloakdemo.Configs;
 
-//import jakarta.ws.rs.client.ClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-
-//import javax.ws.rs.client.Client;
-//import javax.ws.rs.client.Client;
-//import javax.ws.rs.client.ClientBuilder;
 
 public class KeycloakConfig {
 
     static Keycloak keycloak = null;
     final static String serverUrl = "https://localhost:8443";
-    public final static String realm = "master";
+    final static String realm = "master";
     final static String clientId = "admin-cli";
     final static String clientSecret = "";
     final static String userName = "admin";

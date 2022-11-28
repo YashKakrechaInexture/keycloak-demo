@@ -12,7 +12,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
 
 @Component
 public class KeycloakLogoutHandler implements LogoutHandler {
