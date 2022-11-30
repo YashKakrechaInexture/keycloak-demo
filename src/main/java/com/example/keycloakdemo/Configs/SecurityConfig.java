@@ -124,10 +124,10 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .and().logout().addLogoutHandler(keycloakLogoutHandler()).logoutUrl("/tenant/*/logout").logoutSuccessHandler(
                         // logout handler for API
                         (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
+                            // redirect url after logout
                             response.sendRedirect(request.getRequestURI().substring(0,10)+"/index");
                             response.setStatus(HttpServletResponse.SC_OK);
                         });
-//                ).logoutSuccessUrl("/tenant/us/index");
         http
                 .authorizeRequests()
 //                .antMatchers("/tenant/**","/user","/profile","/roles").hasRole("user")

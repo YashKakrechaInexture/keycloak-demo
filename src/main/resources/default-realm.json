@@ -1,0 +1,8 @@
+{
+  "realm" : "",
+  "resource" : "",
+  "credentials" : {
+    "secret" : ""
+  },
+  "auth-server-url" : ""
+}
