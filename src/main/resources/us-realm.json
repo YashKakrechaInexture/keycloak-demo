@@ -1,9 +1,0 @@
-{
-  "realm" : "us-realm",
-  "resource" : "usClient",
-  "credentials" : {
-    "secret" : "p96mXb3b1j3Kyb6Sx34gLyaojjj9oaT7"
-  },
-  "auth-server-url" : "https://localhost:8443",
-  "public-client" : false
-}
