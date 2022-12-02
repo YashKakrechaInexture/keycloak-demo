@@ -51,6 +51,7 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
             return realmCache.getOrDefault(realm, null);
         }
     }
+
     public String getRealm(String realm){
         String url = "https://raw.githubusercontent.com/"+githubUsername+"/"+githubRepository+"/main/"+realm+"-realm.json";
         try {
