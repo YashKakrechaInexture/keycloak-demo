@@ -7,14 +7,9 @@ import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Scanner;
 
 import static com.example.keycloakdemo.Util.Credentials.setUserInformation;
 
@@ -24,11 +19,6 @@ public class FrontController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping("/{realm}")
-//    @ResponseBody
-//    public String loginPage(@PathVariable String realm){
-//        return "Welcome to "+realm+" region.";
-//    }
     @GetMapping("/tenant/{realm}")
     public ModelAndView loginPage(@PathVariable String realm, KeycloakAuthenticationToken token){
         return setUserInformation(token,"user");
@@ -60,7 +50,6 @@ public class FrontController {
     public ModelAndView rolesPage(KeycloakAuthenticationToken token){
         ModelAndView modelAndView = setUserInformation(token,"roles");
         modelAndView.addObject("realmRoles",userService.getAllRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername(),(String) modelAndView.getModel().get("realm")+"-realm"));
-//        modelAndView.addObject("userRealmRoles",userService.getUserRealmRoles(((UserDTO)modelAndView.getModel().get("user")).getUsername()));
         return modelAndView;
     }
 

@@ -1,6 +1,5 @@
 package com.example.keycloakdemo.Configs;
 
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
@@ -14,12 +13,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -33,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @DependsOn("keycloakConfigResolver")
 @KeycloakConfiguration
-@Import(KeycloakSpringBootConfigResolver.class)
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     /**
@@ -52,12 +48,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
     @Bean
     @Override
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(buildSessionRegistry());
-    }
-
-    @Bean
-    protected SessionRegistry buildSessionRegistry() {
-        return new SessionRegistryImpl();
+        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
     }
 
     @Override
@@ -113,7 +104,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        super.configure(http);
         http.sessionManagement()
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 // keycloak filters for securisation
@@ -128,19 +118,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                             response.sendRedirect(request.getRequestURI().substring(0,10)+"/index");
                             response.setStatus(HttpServletResponse.SC_OK);
                         });
-        http
-                .authorizeRequests()
-//                .antMatchers("/tenant/**","/user","/profile","/roles").hasRole("user")
-//                .antMatchers("/admin*").hasRole("admin")
-//                .antMatchers("/tenant/*").hasRole("user")
+        http.authorizeRequests()
                 .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/","/tenant/**/index","/create").permitAll()
                 .anyRequest().authenticated();
-//                .anyRequest().permitAll()
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/")
-//                .permitAll();
         http.csrf().disable();
     }
 }

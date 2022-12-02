@@ -19,34 +19,34 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 
     private final ConcurrentHashMap<String, KeycloakDeployment> realmCache = new ConcurrentHashMap<>();
 
+
     @Override
     public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
         String path = request.getURI();
         String realm = null;
         int multitenantIndex = path.indexOf("tenant/");
-//        if (multitenantIndex == -1) {
-//            throw new IllegalStateException("Not able to resolve realm from the request path!");
-//        }
 
-        if(multitenantIndex != -1) {
+        if(multitenantIndex != -1){
             String arr[] = path.substring(path.indexOf("tenant/")).split("/");
             if(arr.length>1) {
                 realm = arr[1];
             }
         }
-        if (realm == null) {
+        if(realm == null){
             realm = "default";
         }
-        if (realmCache.containsKey(realm)) {
-            return realmCache.get(realm);
+        synchronized(realmCache){
+            if (realmCache.containsKey(realm)) {
+                return realmCache.get(realm);
+            }
+            String json = getRealm(realm);
+            if(json.equals("")){
+                return null;
+            }
+            InputStream is = IOUtils.toInputStream(json);
+            realmCache.put(realm, KeycloakDeploymentBuilder.build(is));
+            return realmCache.getOrDefault(realm, null);
         }
-        String json = getRealm(realm);
-        if(json.equals("")){
-            return null;
-        }
-        InputStream is = IOUtils.toInputStream(json);
-        realmCache.put(realm, KeycloakDeploymentBuilder.build(is));
-        return realmCache.getOrDefault(realm, null);
     }
     public String getRealm(String realm){
         String url = "https://raw.githubusercontent.com/YashKakrechaInexture/realms-repo/main/"+realm+"-realm.json";
