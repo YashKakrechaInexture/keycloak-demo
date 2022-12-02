@@ -19,6 +19,9 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 
     private final ConcurrentHashMap<String, KeycloakDeployment> realmCache = new ConcurrentHashMap<>();
 
+    String githubUsername = "YashKakrechaInexture";
+
+    String githubRepository = "realms-repo";
 
     @Override
     public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
@@ -49,7 +52,7 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
         }
     }
     public String getRealm(String realm){
-        String url = "https://raw.githubusercontent.com/YashKakrechaInexture/realms-repo/main/"+realm+"-realm.json";
+        String url = "https://raw.githubusercontent.com/"+githubUsername+"/"+githubRepository+"/main/"+realm+"-realm.json";
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(url);
