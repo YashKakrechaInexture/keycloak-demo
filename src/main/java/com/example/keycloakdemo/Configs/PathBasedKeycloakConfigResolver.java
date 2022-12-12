@@ -13,15 +13,35 @@ import org.keycloak.adapters.OIDCHttpFacade;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
 
     private final ConcurrentHashMap<String, KeycloakDeployment> realmCache = new ConcurrentHashMap<>();
 
-    String githubUsername = "YashKakrechaInexture";
+    String githubUsername;
 
-    String githubRepository = "realms-repo";
+    String githubRepository;
+
+    private final String GITHUB_URL = "https://raw.githubusercontent.com/";
+    private final String SLASH = "/";
+    private final String MAIN = "main";
+    private final String SUFFIX = "-realm.json";
+
+    public PathBasedKeycloakConfigResolver(){
+        Properties properties = new Properties();
+
+        InputStream applicationPropertiesStream = getClass().getResourceAsStream("/application.properties");
+        try {
+            properties.load(applicationPropertiesStream);
+        }catch(Exception e){
+            throw new RuntimeException("Properties files cannot be read.");
+        }
+
+        githubUsername = properties.getProperty("github.username");
+        githubRepository = properties.getProperty("github.repository");
+    }
 
     @Override
     public KeycloakDeployment resolve(OIDCHttpFacade.Request request) {
@@ -53,7 +73,8 @@ public class PathBasedKeycloakConfigResolver implements KeycloakConfigResolver {
     }
 
     public String getRealm(String realm){
-        String url = "https://raw.githubusercontent.com/"+githubUsername+"/"+githubRepository+"/main/"+realm+"-realm.json";
+        String url = GITHUB_URL + githubUsername + SLASH + githubRepository +
+                SLASH + MAIN + SLASH + realm + SUFFIX;
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(url);

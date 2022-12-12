@@ -65,6 +65,12 @@ public class FrontController {
         return userService.addUser(userDTO) ;
     }
 
+    @PostMapping("/createRealm")
+    @ResponseBody
+    public String createRealm(String realmName) throws Exception {
+        return userService.createRealm(realmName);
+    }
+
     @GetMapping("/tenant/{realm}/addRealmRole/{name}")
     @ResponseBody
     public String addRealmRole(@PathVariable String name,

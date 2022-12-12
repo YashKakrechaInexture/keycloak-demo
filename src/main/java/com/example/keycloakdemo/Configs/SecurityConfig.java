@@ -58,14 +58,16 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected KeycloakAuthenticationProcessingFilter keycloakAuthenticationProcessingFilter() throws Exception {
-        KeycloakAuthenticationProcessingFilter filter = new KeycloakAuthenticationProcessingFilter(authenticationManager(), new AntPathRequestMatcher("/tenant/*/sso/login"));
+        KeycloakAuthenticationProcessingFilter filter = new KeycloakAuthenticationProcessingFilter(
+                authenticationManager(), new AntPathRequestMatcher("/tenant/*/sso/login"));
         filter.setSessionAuthenticationStrategy(sessionAuthenticationStrategy());
         return filter;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean
-    public FilterRegistrationBean keycloakAuthenticationProcessingFilterRegistrationBean(KeycloakAuthenticationProcessingFilter filter) {
+    public FilterRegistrationBean keycloakAuthenticationProcessingFilterRegistrationBean(
+            KeycloakAuthenticationProcessingFilter filter) {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
         registrationBean.setEnabled(false);
         return registrationBean;
@@ -108,10 +110,13 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .sessionAuthenticationStrategy(sessionAuthenticationStrategy())
                 // keycloak filters for securisation
                 .and().addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
-                .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class).exceptionHandling()
+                .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
+                .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and().cors()
-                .and().logout().addLogoutHandler(keycloakLogoutHandler()).logoutUrl("/tenant/*/logout").logoutSuccessHandler(
+                .and()
+                .logout().addLogoutHandler(keycloakLogoutHandler()).logoutUrl("/tenant/*/logout")
+                .logoutSuccessHandler(
                         // logout handler for API
                         (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
                             // redirect url after logout
@@ -119,7 +124,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                             response.setStatus(HttpServletResponse.SC_OK);
                         });
         http.authorizeRequests()
-                .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/","/tenant/**/index","/create").permitAll()
+                .antMatchers("/static/*","/CSS/*","/images/*","/favicon.ico","/",
+                        "/tenant/**/index","/create","/createRealm").permitAll()
                 .anyRequest().authenticated();
         http.csrf().disable();
     }

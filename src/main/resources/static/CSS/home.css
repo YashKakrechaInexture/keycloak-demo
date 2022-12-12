@@ -1,6 +1,8 @@
 #login-btn{
     color: #198754;
     padding: 6px 12px;
+}
+.nav-buttons{
     margin-right: 10px;
 }
 #logout-btn{
@@ -38,6 +40,7 @@
 .region-box{
     border: 1px solid black;
     border-radius: 13px;
+    margin-bottom: 10px;
 }
 .region-box:hover{
     background-color: #fafdff;
